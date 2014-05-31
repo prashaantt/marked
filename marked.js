@@ -973,9 +973,9 @@ Renderer.prototype.footnoteref = function(key, count) {
 Renderer.prototype.footnotes = function(notes) {
   var out = '<ol class="footnotes">';
   for (var i = 0; i < notes.length; i++) {
-    out += '<li id="fn-' + escape(notes[i].key) + '">';
-    out += notes[i].text;
-    out += '<a href="#fnref-' + escape(notes[i].key) + '">&#8617;</a>'
+    out += '<li id="fn' + escape(notes[i].key) + '">';
+    fnref = ' [&#8617;](#fnref' + escape(notes[i].key) + ')';
+    out += marked(notes[i].text.trim() + fnref)
     out += '</li>';
   }
   out += '</ol>';
