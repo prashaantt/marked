@@ -397,16 +397,6 @@ Lexer.prototype.token = function(src, top, bq) {
       continue;
     }
 
-    // def
-    if ((!bq && top) && (cap = this.rules.def.exec(src))) {
-      src = src.substring(cap[0].length);
-      this.tokens.links[cap[1].toLowerCase()] = {
-        href: cap[2],
-        title: cap[3]
-      };
-      continue;
-    }
-
     // footnote
     if (top && (cap = this.rules.footnote.exec(src))) {
       src = src.substring(cap[0].length);
@@ -418,6 +408,16 @@ Lexer.prototype.token = function(src, top, bq) {
       this.tokens.footnotes['_' + key] = {
         text: cap[2],
         count: this.tokens.footnotes.length
+      };
+      continue;
+    }
+
+    // def
+    if ((!bq && top) && (cap = this.rules.def.exec(src))) {
+      src = src.substring(cap[0].length);
+      this.tokens.links[cap[1].toLowerCase()] = {
+        href: cap[2],
+        title: cap[3]
       };
       continue;
     }
@@ -971,11 +971,12 @@ Renderer.prototype.footnoteref = function(key, count) {
 };
 
 Renderer.prototype.footnotes = function(notes) {
+  var options = this.options;
   var out = '<ol class="footnotes">';
   for (var i = 0; i < notes.length; i++) {
     out += '<li id="fn' + escape(notes[i].key) + '">';
     fnref = ' [&#8617;](#fnref' + escape(notes[i].key) + ')';
-    out += marked(notes[i].text.trim() + fnref)
+    out += marked(notes[i].text.trim() + fnref, options);
     out += '</li>';
   }
   out += '</ol>';
